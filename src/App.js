@@ -1,30 +1,14 @@
 import React from "react";
-import { DrizzleContext } from "@drizzle/react-plugin";
-import { Drizzle } from "@drizzle/store";
-import drizzleOptions from "./drizzleOptions";
-import MyComponent from "./MyComponent";
-import "./App.css";
+import { Provider } from "react-redux";
 
-const drizzle = new Drizzle(drizzleOptions);
+import Pages from "./Pages";
 
-const App = () => {
+const App = ({ drizzle, store }) => {
   return (
-    <DrizzleContext.Provider drizzle={drizzle}>
-      <DrizzleContext.Consumer>
-        {drizzleContext => {
-          const { drizzle, drizzleState, initialized } = drizzleContext;
-
-          if (!initialized) {
-            return "Loading..."
-          }
-
-          return (
-            <MyComponent drizzle={drizzle} drizzleState={drizzleState} />
-          )
-        }}
-      </DrizzleContext.Consumer>
-    </DrizzleContext.Provider>
+    <Provider store={store}>
+      <Pages />
+    </Provider>
   );
-}
+};
 
 export default App;
