@@ -22,7 +22,14 @@ const Pages = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(updateDrizzleInit(drizzleStatus.initialized));
+    if (drizzleStatus && drizzleStatus.initialized && window.web3) {
+      window.web3.version.getNetwork((error, networkId) => {
+        const status = networkId === "42";
+        dispatch(updateDrizzleInit(status));
+      });
+    } else {
+      dispatch(updateDrizzleInit(false));
+    }
   }, [drizzleStatus.initialized]);
 
   return (
