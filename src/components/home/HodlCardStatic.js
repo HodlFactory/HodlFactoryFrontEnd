@@ -24,22 +24,26 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
 
   return (
     <>
-      <Card className="d-block">
-        <p className="text-uppercase">{hodlType} HODL</p>
-        <p>100 DAI</p>
-        <p>CURRENT APY:</p>
-        <p> %</p>
-        <p>TITLE</p>
-        <p>'s HODL</p>
-        <p></p>
-        <Button
-          variant="primary"
-          disabled={!drizzleInit}
-          onClick={handleCreateHodl}
-        >
-          CREATE
-        </Button>
-      </Card>
+      <div className="card-wrapper">
+        <Card className="d-block text-center">
+          <p className="text-uppercase card-title">{hodlType} HODL</p>
+          <p className="card-price">100 DAI</p>
+          <p className="text-uppercase card-interest-label">
+            Interest Accured:
+          </p>
+          <p className="card-interest-value">Up to 1,000,000 DAI!</p>
+          <p className="card-owner-label">OWNER</p>
+          <p className="card-owner-value">Your name right here!</p>
+          <Button
+            className="card-button-create"
+            variant="primary"
+            disabled={!drizzleInit}
+            onClick={handleCreateHodl}
+          >
+            CREATE
+          </Button>
+        </Card>
+      </div>
 
       <Modal show={showForm} onHide={handleCloseForm} centered>
         <Modal.Header closeButton>
@@ -66,7 +70,11 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
                     It doesn't have to be your real name.
                   </Form.Text>
                 </Form.Group>
-                <Button variant="success" type="submit">
+                <Button
+                  variant="success"
+                  type="submit"
+                  onClick={handleCloseForm}
+                >
                   Create now
                 </Button>
               </form>

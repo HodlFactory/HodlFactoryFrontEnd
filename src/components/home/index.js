@@ -10,6 +10,12 @@ const Home = () => {
   return (
     <>
       <Container>
+        <Row className="justify-content-center section-padding">
+          <p className="display-4 text-primary">
+            <span className="font-weight-bold">HODL</span> and watch it{" "}
+            <span className="text-underlined">gain interest</span>!
+          </p>
+        </Row>
         <Row>
           <Col md={4} className="d-flex align-items-stretch">
             <HodlCardStatic

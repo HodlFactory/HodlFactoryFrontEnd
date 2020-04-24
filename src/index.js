@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import DrizzleLoader from "./drizzle/DrizzleLoader";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./index.css";
+
+import "./index.scss";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(<DrizzleLoader />, document.getElementById("root"));

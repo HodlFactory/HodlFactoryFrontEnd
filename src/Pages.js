@@ -47,6 +47,9 @@ const Pages = () => {
           </Col>
         </Row>
       </Container>
+      <footer className="footer py-3 text-center">
+        <div className="container">copyright 2020 THE HODL FACTORY</div>
+      </footer>
     </Router>
   );
 };

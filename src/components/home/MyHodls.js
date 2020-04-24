@@ -15,21 +15,29 @@ const MyHodls = () => {
   return (
     <>
       <Container>
+        <Row className="section-title justify-content-center align-items-center section-padding">
+          <hr />
+          <p>My HODL's</p>
+          <hr />
+        </Row>
         <Row>
-          <Col md={4} className="d-flex align-items-stretch">
-            {classicHodls && classicHodls.length > 0
-              ? classicHodls.map((hodlId) => {
-                  return (
+          {classicHodls && classicHodls.length > 0
+            ? classicHodls.map((hodlId) => {
+                return (
+                  <Col
+                    key={hodlId}
+                    md={3}
+                    className="d-flex align-items-stretch"
+                  >
                     <HodlCard
-                      key={hodlId}
                       hodlId={hodlId}
                       hodlType="regular"
                       hodlContract={"ClassicHodlFactory"}
                     />
-                  );
-                })
-              : null}
-          </Col>
+                  </Col>
+                );
+              })
+            : null}
         </Row>
       </Container>
     </>
