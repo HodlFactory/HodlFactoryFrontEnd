@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { drizzleReactHooks } from "@drizzle/react-plugin";
 import { newContextComponents } from "@drizzle/react-components";
 
-import { Card, Button, Modal, Form } from "react-bootstrap";
+import { Card, Button, Modal, Form, Carousel } from "react-bootstrap";
 
 const { useDrizzle, useDrizzleState } = drizzleReactHooks;
 const { ContractForm } = newContextComponents;
@@ -13,6 +13,11 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
   const state = useDrizzleState((state) => state);
   const drizzleInit = useSelector((state) => state.global.drizzleInit);
   const [showForm, setShowForm] = useState(false);
+  const [indexCarousel, setIndexCarousel] = useState(0);
+
+  const handleCarousel = (selectedIndex, e) => {
+    setIndexCarousel(selectedIndex);
+  };
 
   const handleCreateHodl = () => {
     setShowForm(true);
@@ -70,6 +75,51 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
                     It doesn't have to be your real name.
                   </Form.Text>
                 </Form.Group>
+                <Carousel activeIndex={indexCarousel} onSelect={handleCarousel}>
+                  <Carousel.Item>
+                    <img
+                      className="d-block w-100"
+                      src="holder.js/800x400?text=First slide&bg=373940"
+                      alt="First slide"
+                    />
+                    <Carousel.Caption>
+                      <h3>First slide label</h3>
+                      <p>
+                        Nulla vitae elit libero, a pharetra augue mollis
+                        interdum.
+                      </p>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                  <Carousel.Item>
+                    <img
+                      className="d-block w-100"
+                      src="holder.js/800x400?text=Second slide&bg=282c34"
+                      alt="Second slide"
+                    />
+
+                    <Carousel.Caption>
+                      <h3>Second slide label</h3>
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      </p>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                  <Carousel.Item>
+                    <img
+                      className="d-block w-100"
+                      src="holder.js/800x400?text=Third slide&bg=20232a"
+                      alt="Third slide"
+                    />
+
+                    <Carousel.Caption>
+                      <h3>Third slide label</h3>
+                      <p>
+                        Praesent commodo cursus magna, vel scelerisque nisl
+                        consectetur.
+                      </p>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                </Carousel>
                 <Button
                   variant="success"
                   type="submit"

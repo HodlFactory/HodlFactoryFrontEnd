@@ -16,8 +16,6 @@ const DrizzleLoader = () => {
     return hasWeb3Provider;
   };
 
-  console.log(drizzleOptions);
-
   return hasWeb3Provider ? (
     <DrizzleProvider drizzle={drizzle}>
       <App drizzle={drizzle} store={store} />
