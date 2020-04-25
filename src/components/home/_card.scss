@@ -43,3 +43,26 @@
     margin-bottom: 1.5rem;
   }
 }
+
+.carousel {
+  .slider {
+    padding-bottom: 38px;
+  }
+  .slide {
+    background: transparent;
+
+    .legend {
+      bottom: -38px;
+      background: transparent;
+    }
+  }
+
+  .carousel-status {
+    text-shadow: none;
+    color: black;
+  }
+}
+
+.slide-panel {
+  padding: 30px 25px;
+}

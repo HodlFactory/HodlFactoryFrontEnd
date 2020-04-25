@@ -16,12 +16,21 @@ const Home = () => {
             <span className="text-underlined">gain interest</span>!
           </p>
         </Row>
-        <Row>
-          <Col md={4} className="d-flex align-items-stretch">
+        <Row className="justify-content-center">
+          <Col md={3} className="d-flex align-items-stretch">
             <HodlCardStatic
               hodlType="regular"
               hodlContract="ClassicHodlFactory"
             />
+          </Col>
+          <Col md={3} className="d-flex align-items-stretch">
+            <HodlCardStatic
+              hodlType="charity"
+              hodlContract="CharityHodlFactory"
+            />
+          </Col>
+          <Col md={3} className="d-flex align-items-stretch">
+            <HodlCardStatic hodlType="ponzi" hodlContract="PonziHodlFactory" />
           </Col>
         </Row>
         <Row>{drizzleInit && <MyHodls />}</Row>
