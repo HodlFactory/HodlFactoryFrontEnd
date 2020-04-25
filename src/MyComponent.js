@@ -1,6 +1,6 @@
 import React from "react";
 import { newContextComponents } from "@drizzle/react-components";
-import logo from "./logo.png";
+
 
 const { AccountData, ContractData, ContractForm } = newContextComponents;
 
@@ -10,7 +10,7 @@ export default ({ drizzle, drizzleState }) => {
     <div className="App">
       <div>
         {/* <img src={logo} alt="drizzle-logo" /> */}
-        <h1>HodlFactrory</h1>
+        <h1>HodlFactory</h1>
         <p>
           MVP
         </p>
@@ -29,9 +29,11 @@ export default ({ drizzle, drizzleState }) => {
 
       <div className="section">
         <h2>HodlFactory</h2>
+        
         <p>
           All this does is tell you how many HODLs have been created, and a button to create a HODL. You can verify that a HODL is indeed being created via etherscan. The HODLs are already almost feature complete, they connect to compound and the dai will start to earn interest immediately. Although the HODLs cost 100 Dai, you do not need any to create one, as 100 Dai is added to your account automatically via a faucet when you purchase a HODL. 
         </p>
+        
         <p>
           <strong>Number of HODLs created </strong>
           <ContractData
