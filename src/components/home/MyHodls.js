@@ -9,6 +9,7 @@ const { useDrizzle } = drizzleReactHooks;
 
 const MyHodls = () => {
   const { useCacheCall } = useDrizzle();
+  const [hodls, setHodls] = useState([]);
   const [classicHodls, setClassicHodls] = useState([]);
   const [charityHodls, setCharityHodls] = useState([]);
   const [ponziHodls, setPonziHodls] = useState([]);
@@ -16,28 +17,94 @@ const MyHodls = () => {
   const allClassicHodls = useCacheCall("ClassicHodlFactory", "getHodlsOwned");
   const allCharityHodls = useCacheCall("CharityHodlFactory", "getHodlsOwned");
   const allPonziHodls = useCacheCall("PonziHodlFactory", "getHodlsOwned");
-  const deletedClassicHodls = [];
-  //useCacheCall("ClassicHodlFactory", "getHodlsDeleted");
-  const deletedCharityHodls = [];
-  const deletedPonziHodls = [];
+  const deletedClassicHodls = useCacheCall(
+    "ClassicHodlFactory",
+    "getHodlsDeleted"
+  );
+  const deletedCharityHodls = useCacheCall(
+    "CharityHodlFactory",
+    "getHodlsDeleted"
+  );
+  const deletedPonziHodls = useCacheCall("PonziHodlFactory", "getHodlsDeleted");
 
   useEffect(() => {
     if (allClassicHodls && deletedClassicHodls) {
-      setClassicHodls(filterDeleted(allClassicHodls, deletedClassicHodls));
+      composeArray(allClassicHodls, deletedClassicHodls, {
+        type: "regular",
+        contract: "ClassicHodlFactory",
+      }).then((res) => setClassicHodls(res));
     }
+  }, [allClassicHodls, deletedClassicHodls]);
+
+  useEffect(() => {
     if (allCharityHodls && deletedCharityHodls) {
-      setCharityHodls(filterDeleted(allCharityHodls, deletedCharityHodls));
+      composeArray(allCharityHodls, deletedCharityHodls, {
+        type: "charity",
+        contract: "CharityHodlFactory",
+      }).then((res) => setCharityHodls(res));
     }
+  }, [allCharityHodls, deletedCharityHodls]);
+
+  useEffect(() => {
     if (allPonziHodls && deletedPonziHodls) {
-      setPonziHodls([]);
-      //setPonziHodls(filterDeleted(allClassicHodls, deletedPonziHodls));
+      composeArray(allPonziHodls, deletedPonziHodls, {
+        type: "ponzi",
+        contract: "PonziHodlFactory",
+      }).then((res) => setPonziHodls(res));
     }
-  }, [allClassicHodls, allPonziHodls, deletedClassicHodls, deletedPonziHodls]);
+  }, [allPonziHodls, deletedPonziHodls]);
+
+  useEffect(() => {
+    const allHodls = classicHodls.concat(charityHodls, ponziHodls);
+    setHodls(allHodls);
+  }, [classicHodls, charityHodls, ponziHodls]);
 
   const filterDeleted = (all, deleted) => {
-    return all.filter(function (item) {
-      return !deleted.includes(item);
+    return new Promise((resolve, reject) => {
+      const filter = all.filter(function (item) {
+        return !deleted.includes(item);
+      });
+      resolve(filter);
     });
+  };
+
+  const functionWithPromise = (item) => {
+    return Promise.resolve(item);
+  };
+
+  const anAsyncFunction = async (item) => {
+    return functionWithPromise(item);
+  };
+
+  const categorize = async (array, options) => {
+    return Promise.all(
+      array.map((item) => {
+        return anAsyncFunction({
+          id: item,
+          type: options.type,
+          contract: options.contract,
+        });
+      })
+    );
+  };
+
+  const composeArray = async (all, deleted, options) => {
+    let filtered = all;
+
+    if (deleted.length > 0) {
+      filtered = await filterDeleted(all, deleted);
+    }
+
+    if (all.length > 0) {
+      try {
+        const categorized = await categorize(filtered, options);
+        return categorized;
+      } catch (e) {
+        return "error";
+      }
+    }
+
+    return [];
   };
 
   return (
@@ -49,52 +116,18 @@ const MyHodls = () => {
           <hr />
         </Row>
         <Row>
-          {classicHodls.length > 0
-            ? classicHodls.map((hodlId) => {
+          {hodls.length > 0
+            ? hodls.map((hodl) => {
                 return (
                   <Col
-                    key={hodlId}
+                    key={`${hodl.type}-${hodl.id}`}
                     md={3}
                     className="d-flex align-items-stretch"
                   >
                     <HodlCard
-                      hodlId={hodlId}
-                      hodlType="regular"
-                      hodlContract={"ClassicHodlFactory"}
-                    />
-                  </Col>
-                );
-              })
-            : null}
-          {charityHodls.length > 0
-            ? charityHodls.map((hodlId) => {
-                return (
-                  <Col
-                    key={hodlId}
-                    md={3}
-                    className="d-flex align-items-stretch"
-                  >
-                    <HodlCard
-                      hodlId={hodlId}
-                      hodlType="charity"
-                      hodlContract={"CharityHodlFactory"}
-                    />
-                  </Col>
-                );
-              })
-            : null}
-          {ponziHodls.length > 0
-            ? ponziHodls.map((hodlId) => {
-                return (
-                  <Col
-                    key={hodlId}
-                    md={3}
-                    className="d-flex align-items-stretch"
-                  >
-                    <HodlCard
-                      hodlId={hodlId}
-                      hodlType="ponzi"
-                      hodlContract={"PonziHodlFactory"}
+                      hodlId={hodl.id}
+                      hodlType={hodl.type}
+                      hodlContract={hodl.contract}
                     />
                   </Col>
                 );

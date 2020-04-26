@@ -40,7 +40,7 @@ const HodlCard = ({ hodlId, hodlType, hodlContract }) => {
 
   return (
     <>
-      <div className="card-wrapper">
+      <div className="card-wrapper mb-3">
         <Card className="d-block text-center">
           <p className="text-uppercase card-title">{hodlType} HODL</p>
           <p className="card-price">100 DAI</p>
@@ -53,9 +53,10 @@ const HodlCard = ({ hodlId, hodlType, hodlContract }) => {
               drizzle={drizzle}
               drizzleState={state}
               render={weiToDai}
-            />
+            />{" "}
+            DAI
           </p>
-          <p className="card-owner-label">TITLE</p>
+          <p className="card-owner-label">OWNER</p>
           <p className="card-owner-value">
             <ContractData
               contract={hodlContract}
