@@ -107,6 +107,28 @@ const MyHodls = () => {
     return [];
   };
 
+  const addDateToHodl = (date, hodl) => {
+    const newArray = hodls.slice();
+    const hodlIndex = hodls.findIndex(
+      (x) => x.id === hodl.id && x.type === hodl.type
+    );
+    if (hodlIndex > -1) {
+      newArray[hodlIndex].date = date;
+      newArray.sort(compare_date);
+      setHodls(newArray);
+    }
+  };
+
+  const compare_date = (a, b) => {
+    if (a.date < b.date) {
+      return -1;
+    } else if (a.date > b.date) {
+      return 1;
+    } else {
+      return 0;
+    }
+  };
+
   return (
     <>
       <Container>
@@ -128,6 +150,7 @@ const MyHodls = () => {
                       hodlId={hodl.id}
                       hodlType={hodl.type}
                       hodlContract={hodl.contract}
+                      addDateToHodl={addDateToHodl}
                     />
                   </Col>
                 );

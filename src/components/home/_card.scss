@@ -1,15 +1,24 @@
 .card-wrapper {
   border-radius: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-  background: url("../../assets/patterns/fruits.jpg") no-repeat center center;
   padding: 20px 10px;
+
+  &.card-regular {
+    background: url("../../assets/patterns/regular.jpg") no-repeat center center;
+  }
+  &.card-charity {
+    background: url("../../assets/patterns/charity.png") no-repeat center center;
+  }
+  &.card-ponzi {
+    background: url("../../assets/patterns/ponzi.png") no-repeat center center;
+  }
 }
 
 .card {
   border-radius: 10px !important;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   padding: 15px 20px;
-  min-width: 200px;
+  min-width: 250px;
 
   .card-title {
     font-size: 1.25rem;
@@ -66,4 +75,9 @@
 
 .slide-panel {
   padding: 30px 25px;
+}
+
+.carousel .slide img {
+  width: auto;
+  height: 150px;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { drizzleReactHooks } from "@drizzle/react-plugin";
 import { newContextComponents } from "@drizzle/react-components";
@@ -16,9 +16,20 @@ Number.prototype.toFixedDown = function (digits) {
   return m ? parseFloat(m[1]) : this.valueOf();
 };
 
-const HodlCard = ({ hodlId, hodlType, hodlContract }) => {
-  const { drizzle } = useDrizzle();
+const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
+  const { drizzle, useCacheCall } = useDrizzle();
   const state = useDrizzleState((state) => state);
+
+  const purchaseTime = useCacheCall(hodlContract, "getHodlPurchaseTime", [
+    hodlId,
+  ]);
+
+  useEffect(() => {
+    if (purchaseTime) {
+      const convertedDate = moment.unix(purchaseTime);
+      addDateToHodl(convertedDate, { id: hodlId, type: hodlType });
+    }
+  }, [purchaseTime]);
 
   const weiToDai = (value) => {
     const converted = value * Math.pow(10, -18);
@@ -40,15 +51,19 @@ const HodlCard = ({ hodlId, hodlType, hodlContract }) => {
 
   return (
     <>
-      <div className="card-wrapper mb-3">
-        <Card className="d-block text-center">
+      <div className={`card-wrapper mb-3 card-${hodlType}`}>
+        <Card className="d-block text-center h-100 d-flex flex-column align-items-center">
           <p className="text-uppercase card-title">{hodlType} HODL</p>
           <p className="card-price">100 DAI</p>
           <p className="card-interest-label">Interest Accured:</p>
           <p className="card-interest-value">
             <ContractData
               contract={hodlContract}
-              method="getInterestAvailableToWithdraw"
+              method={
+                hodlType === "ponzi"
+                  ? "getInterestAvailableToWithdrawView"
+                  : "getInterestAvailableToWithdraw"
+              }
               methodArgs={[hodlId]}
               drizzle={drizzle}
               drizzleState={state}
@@ -67,32 +82,36 @@ const HodlCard = ({ hodlId, hodlType, hodlContract }) => {
             />
             's HODL
           </p>
-          <p className="card-countdown">
-            <ContractData
+          {hodlType === "ponzi" ? null : (
+            <p className="card-countdown">
+              <ContractData
+                contract={hodlContract}
+                method="getHodlPurchaseTime"
+                methodArgs={[hodlId]}
+                drizzle={drizzle}
+                drizzleState={state}
+                render={convertToActualDate}
+              />
+            </p>
+          )}
+          {hodlType === "regular" ? (
+            <ContractForm
               contract={hodlContract}
-              method="getHodlPurchaseTime"
-              methodArgs={[hodlId]}
+              method="withdrawInterest"
               drizzle={drizzle}
               drizzleState={state}
-              render={convertToActualDate}
+              render={({ state, handleSubmit }) => {
+                state._hodlId = hodlId;
+                return (
+                  <form onSubmit={handleSubmit} className="mt-auto">
+                    <Button variant="primary" type="submit" className="mb-3">
+                      WITHDRAW INTEREST
+                    </Button>
+                  </form>
+                );
+              }}
             />
-          </p>
-          <ContractForm
-            contract={hodlContract}
-            method="withdrawInterest"
-            drizzle={drizzle}
-            drizzleState={state}
-            render={({ state, handleSubmit }) => {
-              state._hodlId = hodlId;
-              return (
-                <form onSubmit={handleSubmit}>
-                  <Button variant="primary" type="submit" className="mb-3">
-                    WITHDRAW INTEREST
-                  </Button>
-                </form>
-              );
-            }}
-          />
+          ) : null}
           <ContractForm
             contract={hodlContract}
             method="destroyHodl"
@@ -101,7 +120,7 @@ const HodlCard = ({ hodlId, hodlType, hodlContract }) => {
             render={({ state, handleSubmit }) => {
               state._hodlId = hodlId;
               return (
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="mt-auto">
                   <Button variant="danger" type="submit">
                     DESTROY
                   </Button>

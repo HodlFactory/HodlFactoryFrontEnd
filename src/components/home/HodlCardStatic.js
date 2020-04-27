@@ -18,8 +18,7 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
   const [showForm, setShowForm] = useState(false);
   const [indexCarousel, setIndexCarousel] = useState(0);
 
-  const handleCarousel = (index, state) => {
-    state._addressOfCharity = charities[index].address;
+  const handleCarousel = (index) => {
     setIndexCarousel(index);
   };
 
@@ -33,7 +32,7 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
 
   return (
     <>
-      <div className="card-wrapper">
+      <div className={`card-wrapper card-${hodlType}`}>
         <Card className="d-block text-center">
           <p className="text-uppercase card-title">{hodlType} HODL</p>
           <p className="card-price">100 DAI</p>
@@ -65,55 +64,57 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
             method="createHodl"
             drizzle={drizzle}
             drizzleState={state}
-            render={({ state, handleInputChange, handleSubmit }) => (
-              <form onSubmit={handleSubmit}>
-                <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Name</Form.Label>
-                  <Form.Control
-                    name="_name"
-                    type="text"
-                    placeholder="Your name"
-                    onChange={handleInputChange}
-                  />
-                  <Form.Text className="text-muted">
-                    It doesn't have to be your real name.
-                  </Form.Text>
-                </Form.Group>
-                {hodlType === "charity" && (
-                  <Carousel
-                    selectedItem={indexCarousel}
-                    onChange={(index) => handleCarousel(index, state)}
-                    showArrows={true}
-                    showIndicators={false}
-                    showThumbs={false}
+            render={({ state, handleInputChange, handleSubmit }) => {
+              state._addressOfCharity = charities[indexCarousel].address;
+              return (
+                <form onSubmit={handleSubmit}>
+                  <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control
+                      name="_name"
+                      type="text"
+                      placeholder="Your name"
+                      onChange={handleInputChange}
+                    />
+                    <Form.Text className="text-muted">
+                      It doesn't have to be your real name.
+                    </Form.Text>
+                  </Form.Group>
+                  {hodlType === "charity" && (
+                    <Carousel
+                      selectedItem={indexCarousel}
+                      onChange={handleCarousel}
+                      showArrows={true}
+                      showIndicators={false}
+                      showThumbs={false}
+                    >
+                      {charities.map((charity) => {
+                        return (
+                          <div className="slide-panel" key={charity.address}>
+                            <img
+                              src={`charities/${charity.logo}`}
+                              alt={charity.name}
+                            />
+                            <p className="legend">
+                              <a href={charity.website} target="_blank">
+                                {charity.name}
+                              </a>
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </Carousel>
+                  )}
+                  <Button
+                    variant="success"
+                    type="submit"
+                    onClick={handleCloseForm}
                   >
-                    {charities.map((charity) => {
-                      return (
-                        <div className="slide-panel" key={charity.address}>
-                          <img
-                            src={`charities/${charity.logo}`}
-                            alt={charity.name}
-                            heigth={50}
-                          />
-                          <p className="legend">
-                            <a href={charity.website} target="_blank">
-                              {charity.name}
-                            </a>
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </Carousel>
-                )}
-                <Button
-                  variant="success"
-                  type="submit"
-                  onClick={handleCloseForm}
-                >
-                  Create now
-                </Button>
-              </form>
-            )}
+                    Create now
+                  </Button>
+                </form>
+              );
+            }}
           />
         </Modal.Body>
       </Modal>
