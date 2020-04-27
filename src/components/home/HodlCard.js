@@ -5,7 +5,7 @@ import { newContextComponents } from "@drizzle/react-components";
 import moment from "moment";
 import ReactMomentCountDown from "react-moment-countdown";
 
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Modal, Form } from "react-bootstrap";
 
 const { useDrizzle, useDrizzleState } = drizzleReactHooks;
 const { ContractData, ContractForm } = newContextComponents;
@@ -18,7 +18,8 @@ Number.prototype.toFixedDown = function (digits) {
 
 const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
   const { drizzle, useCacheCall } = useDrizzle();
-  const state = useDrizzleState((state) => state);
+  const drizzleState = useDrizzleState((drizzleState) => drizzleState);
+  const [showForm, setShowForm] = useState(false);
 
   const purchaseTime = useCacheCall(hodlContract, "getHodlPurchaseTime", [
     hodlId,
@@ -30,6 +31,14 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
       addDateToHodl(convertedDate, { id: hodlId, type: hodlType });
     }
   }, [purchaseTime]);
+
+  const handleTransferHodl = () => {
+    setShowForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+  };
 
   const weiToDai = (value) => {
     const converted = value * Math.pow(10, -18);
@@ -54,6 +63,7 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
       <div className={`card-wrapper mb-3 card-${hodlType}`}>
         <Card className="d-block text-center h-100 d-flex flex-column align-items-center">
           <p className="text-uppercase card-title">{hodlType} HODL</p>
+          <p className="card-id">ID: {hodlId}</p>
           <p className="card-price">100 DAI</p>
           <p className="card-interest-label">Interest Accured:</p>
           <p className="card-interest-value">
@@ -66,7 +76,7 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
               }
               methodArgs={[hodlId]}
               drizzle={drizzle}
-              drizzleState={state}
+              drizzleState={drizzleState}
               render={weiToDai}
             />{" "}
             DAI
@@ -78,7 +88,7 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
               method="getHodlName"
               methodArgs={[hodlId]}
               drizzle={drizzle}
-              drizzleState={state}
+              drizzleState={drizzleState}
             />
             's HODL
           </p>
@@ -89,7 +99,7 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
                 method="getHodlPurchaseTime"
                 methodArgs={[hodlId]}
                 drizzle={drizzle}
-                drizzleState={state}
+                drizzleState={drizzleState}
                 render={convertToActualDate}
               />
             </p>
@@ -99,12 +109,12 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
               contract={hodlContract}
               method="withdrawInterest"
               drizzle={drizzle}
-              drizzleState={state}
+              drizzleState={drizzleState}
               render={({ state, handleSubmit }) => {
                 state._hodlId = hodlId;
                 return (
-                  <form onSubmit={handleSubmit} className="mt-auto">
-                    <Button variant="primary" type="submit" className="mb-3">
+                  <form onSubmit={handleSubmit} className="mt-auto mb-3">
+                    <Button variant="primary" type="submit">
                       WITHDRAW INTEREST
                     </Button>
                   </form>
@@ -112,15 +122,22 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
               }}
             />
           ) : null}
+          <Button
+            variant="success"
+            className="mt-auto mb-3"
+            onClick={handleTransferHodl}
+          >
+            TRANSFER
+          </Button>
           <ContractForm
             contract={hodlContract}
             method="destroyHodl"
             drizzle={drizzle}
-            drizzleState={state}
+            drizzleState={drizzleState}
             render={({ state, handleSubmit }) => {
               state._hodlId = hodlId;
               return (
-                <form onSubmit={handleSubmit} className="mt-auto">
+                <form onSubmit={handleSubmit}>
                   <Button variant="danger" type="submit">
                     DESTROY
                   </Button>
@@ -130,6 +147,49 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
           />
         </Card>
       </div>
+
+      <Modal show={showForm} onHide={handleCloseForm} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Transfer your {hodlType} hodl</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <ContractForm
+            contract={hodlContract}
+            method="transferFrom"
+            drizzle={drizzle}
+            drizzleState={drizzleState}
+            render={({ state, handleInputChange, handleSubmit }) => {
+              state.tokenId = hodlId;
+              state.from = drizzleState.accounts[0];
+              console.log(state);
+              return (
+                <form onSubmit={handleSubmit}>
+                  <Form.Group>
+                    <Form.Label>Address</Form.Label>
+                    <Form.Control
+                      name="to"
+                      type="text"
+                      placeholder="The address you want to transfer to"
+                      onChange={handleInputChange}
+                    />
+                    <Form.Text className="text-muted">
+                      Make sure the address is correct before hitting send!
+                    </Form.Text>
+                  </Form.Group>
+                  <Button
+                    variant="success"
+                    type="submit"
+                    onClick={handleCloseForm}
+                  >
+                    Send now
+                  </Button>
+                </form>
+              );
+            }}
+          />
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
