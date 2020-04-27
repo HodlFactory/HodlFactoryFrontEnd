@@ -60,9 +60,9 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
             <ContractData
               contract={hodlContract}
               method={
-                hodlType === "ponzi"
-                  ? "getInterestAvailableToWithdrawView"
-                  : "getInterestAvailableToWithdraw"
+                hodlType === "regular"
+                  ? "getInterestAvailableToWithdraw"
+                  : "getInterestAvailableToWithdrawView"
               }
               methodArgs={[hodlId]}
               drizzle={drizzle}
