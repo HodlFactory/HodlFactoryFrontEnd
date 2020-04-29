@@ -17,56 +17,38 @@ const MyHodls = () => {
   const allClassicHodls = useCacheCall("ClassicHodlFactory", "getHodlsOwned");
   const allCharityHodls = useCacheCall("CharityHodlFactory", "getHodlsOwned");
   const allPonziHodls = useCacheCall("PonziHodlFactory", "getHodlsOwned");
-  const deletedClassicHodls = useCacheCall(
-    "ClassicHodlFactory",
-    "getHodlsDeleted"
-  );
-  const deletedCharityHodls = useCacheCall(
-    "CharityHodlFactory",
-    "getHodlsDeleted"
-  );
-  const deletedPonziHodls = useCacheCall("PonziHodlFactory", "getHodlsDeleted");
 
   useEffect(() => {
-    if (allClassicHodls && deletedClassicHodls) {
-      composeArray(allClassicHodls, deletedClassicHodls, {
+    if (allClassicHodls) {
+      composeArray(allClassicHodls, {
         type: "regular",
         contract: "ClassicHodlFactory",
       }).then((res) => setClassicHodls(res));
     }
-  }, [allClassicHodls, deletedClassicHodls]);
+  }, [allClassicHodls]);
 
   useEffect(() => {
-    if (allCharityHodls && deletedCharityHodls) {
-      composeArray(allCharityHodls, deletedCharityHodls, {
+    if (allCharityHodls) {
+      composeArray(allCharityHodls, {
         type: "charity",
         contract: "CharityHodlFactory",
       }).then((res) => setCharityHodls(res));
     }
-  }, [allCharityHodls, deletedCharityHodls]);
+  }, [allCharityHodls]);
 
   useEffect(() => {
-    if (allPonziHodls && deletedPonziHodls) {
-      composeArray(allPonziHodls, deletedPonziHodls, {
+    if (allPonziHodls) {
+      composeArray(allPonziHodls, {
         type: "ponzi",
         contract: "PonziHodlFactory",
       }).then((res) => setPonziHodls(res));
     }
-  }, [allPonziHodls, deletedPonziHodls]);
+  }, [allPonziHodls]);
 
   useEffect(() => {
     const allHodls = classicHodls.concat(charityHodls, ponziHodls);
     setHodls(allHodls);
   }, [classicHodls, charityHodls, ponziHodls]);
-
-  const filterDeleted = (all, deleted) => {
-    return new Promise((resolve, reject) => {
-      const filter = all.filter(function (item) {
-        return !deleted.includes(item);
-      });
-      resolve(filter);
-    });
-  };
 
   const functionWithPromise = (item) => {
     return Promise.resolve(item);
@@ -88,16 +70,10 @@ const MyHodls = () => {
     );
   };
 
-  const composeArray = async (all, deleted, options) => {
-    let filtered = all;
-
-    if (deleted.length > 0) {
-      filtered = await filterDeleted(all, deleted);
-    }
-
+  const composeArray = async (all, options) => {
     if (all.length > 0) {
       try {
-        const categorized = await categorize(filtered, options);
+        const categorized = await categorize(all, options);
         return categorized;
       } catch (e) {
         return "error";
@@ -141,18 +117,13 @@ const MyHodls = () => {
           {hodls.length > 0
             ? hodls.map((hodl) => {
                 return (
-                  <Col
+                  <HodlCard
                     key={`${hodl.type}-${hodl.id}`}
-                    md={3}
-                    className="d-flex align-items-stretch"
-                  >
-                    <HodlCard
-                      hodlId={hodl.id}
-                      hodlType={hodl.type}
-                      hodlContract={hodl.contract}
-                      addDateToHodl={addDateToHodl}
-                    />
-                  </Col>
+                    hodlId={hodl.id}
+                    hodlType={hodl.type}
+                    hodlContract={hodl.contract}
+                    addDateToHodl={addDateToHodl}
+                  />
                 );
               })
             : null}

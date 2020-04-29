@@ -32,25 +32,43 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
 
   return (
     <>
-      <div className={`card-wrapper card-${hodlType}`}>
-        <Card className="d-block text-center">
-          <p className="text-uppercase card-title">{hodlType} HODL</p>
-          <p className="card-price">100 DAI</p>
-          <p className="text-uppercase card-interest-label">
-            Interest Accured:
-          </p>
-          <p className="card-interest-value">Up to 1,000,000 DAI!</p>
-          <p className="card-owner-label">OWNER</p>
-          <p className="card-owner-value">Your name right here!</p>
-          <Button
-            className="card-button-create"
-            variant="primary"
-            disabled={!drizzleInit}
-            onClick={handleCreateHodl}
-          >
-            CREATE
-          </Button>
-        </Card>
+      <div className="d-flex flex-column align-items-center">
+        <p className="text-center">
+          {hodlType === "regular" && <>You keep the interest</>}
+          {hodlType === "charity" && <>Interest goes to charity</>}
+          {hodlType === "ponzi" && <>Interest goes to earlier investors</>}
+        </p>
+        <div className={`card-wrapper card-${hodlType}`}>
+          <Card className="d-block text-center">
+            <p className="text-uppercase card-title">{hodlType} HODL</p>
+            <p className="card-price">100 DAI</p>
+            <p className="text-uppercase card-interest-label">
+              Interest Accured:
+            </p>
+            <p className="card-interest-value">??? DAI</p>
+            <p className="card-owner-label">OWNER</p>
+            <p className="card-owner-value">Your name right here!</p>
+            <Button
+              className="card-button-create"
+              variant="primary"
+              disabled={!drizzleInit}
+              onClick={handleCreateHodl}
+            >
+              CREATE
+            </Button>
+          </Card>
+        </div>
+        <p className="text-right mt-3 align-self-right font-italic">
+          {hodlType === "regular" && <>powered by Aave</>}
+          {hodlType === "charity" && <>powered by rDai</>}
+          {hodlType === "ponzi" && (
+            <>
+              powered by Proprietary Ponzi Technology TM
+              <br />
+              <span className="small">actually it's Aave again</span>
+            </>
+          )}
+        </p>
       </div>
 
       <Modal show={showForm} onHide={handleCloseForm} centered>
