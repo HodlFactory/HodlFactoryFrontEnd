@@ -5,7 +5,13 @@ import { Navbar, Nav } from "react-bootstrap";
 const MainMenu = (props) => {
   return (
     <Navbar collapseOnSelect expand="md">
-      <Navbar.Brand href="/">HODL FACTORY</Navbar.Brand>
+      <Navbar.Brand href="/">
+        <img
+          src="/img/hodl-factory-logo.png"
+          height="45"
+          className="d-inline-block align-top"
+        />
+      </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="ml-auto">
