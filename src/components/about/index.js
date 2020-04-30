@@ -15,7 +15,13 @@ const About = (props) => (
           <Card border="primary" className="h-100">
             <Card.Body>
               <Card.Text className="d-flex flex-column align-items-center justify-content-center text-center">
-                <Image src="/team/andrew.jpg" roundedCircle className="mb-2" />
+                <Image
+                  src="/team/andrew.jpg"
+                  roundedCircle
+                  className="mb-2"
+                  width={164}
+                  height={164}
+                />
                 <div className="details">
                   <p className="font-weight-bold mb-1">Andrew Stanger</p>
                   <p className="mb-0 small">BackEnd Dev</p>
@@ -28,7 +34,13 @@ const About = (props) => (
           <Card border="primary" className="h-100">
             <Card.Body>
               <Card.Text className="d-flex flex-column align-items-center justify-content-center text-center">
-                <Image src="/team/aniket.jpg" roundedCircle className="mb-2" />
+                <Image
+                  src="/team/aniket.jpg"
+                  roundedCircle
+                  className="mb-2"
+                  width={164}
+                  height={164}
+                />
                 <div className="details">
                   <p className="font-weight-bold mb-1">Aniket Tapre</p>
                   <p className="mb-0 small">UI/UX Designer</p>
@@ -41,7 +53,13 @@ const About = (props) => (
           <Card border="primary" className="h-100">
             <Card.Body>
               <Card.Text className="d-flex flex-column align-items-center justify-content-center text-center">
-                <Image src="/team/marcela.jpg" roundedCircle className="mb-2" />
+                <Image
+                  src="/team/marcela.jpg"
+                  roundedCircle
+                  className="mb-2"
+                  width={164}
+                  height={164}
+                />
                 <div className="details">
                   <p className="font-weight-bold mb-1">Marcela Almeida</p>
                   <p className="mb-0 small">FrontEnd Dev</p>
@@ -54,7 +72,13 @@ const About = (props) => (
           <Card border="primary" className="h-100">
             <Card.Body>
               <Card.Text className="d-flex flex-column align-items-center justify-content-center text-center">
-                <Image src="/team/vlad.jpg" roundedCircle className="mb-2" />
+                <Image
+                  src="/team/vlad.jpg"
+                  roundedCircle
+                  className="mb-2"
+                  width={164}
+                  height={164}
+                />
                 <div className="details">
                   <p className="font-weight-bold mb-1">Vlad Micliuc</p>
                   <p className="mb-0 small">Lead FrontEnd Dev</p>
