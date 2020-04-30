@@ -11,7 +11,7 @@ const Home = () => {
     <>
       <Container>
         <Row className="justify-content-center section-padding">
-          <p className="display-4 text-primary">
+          <p className="display-4 text-primary big-title">
             <span className="font-weight-bold">HODL</span> and watch it{" "}
             <span className="text-underlined">gain interest</span>!
           </p>

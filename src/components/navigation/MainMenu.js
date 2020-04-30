@@ -9,16 +9,29 @@ const MainMenu = (props) => {
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="ml-auto">
-          <NavLink to="/" className="nav-link text-uppercase">
+          <NavLink
+            to="/"
+            exact
+            className="nav-link text-uppercase font-weight-bold"
+          >
             HOME
           </NavLink>
-          <NavLink to="/about" className="nav-link text-uppercase">
-            ABOUT US
-          </NavLink>
-          <NavLink to="/how" className="nav-link text-uppercase">
+          <NavLink
+            to="/how"
+            className="nav-link text-uppercase font-weight-bold"
+          >
             HOW IT WORKS
           </NavLink>
-          <NavLink to="/contact" className="nav-link text-uppercase">
+          <NavLink
+            to="/team"
+            className="nav-link text-uppercase font-weight-bold"
+          >
+            TEAM
+          </NavLink>
+          <NavLink
+            to="/contact"
+            className="nav-link text-uppercase font-weight-bold"
+          >
             CONTACT
           </NavLink>
         </Nav>

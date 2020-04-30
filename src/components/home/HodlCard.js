@@ -4,8 +4,9 @@ import { drizzleReactHooks } from "@drizzle/react-plugin";
 import { newContextComponents } from "@drizzle/react-components";
 import moment from "moment";
 import ReactMomentCountDown from "react-moment-countdown";
+import { ReactComponent as Settings } from "../../assets/settings.svg";
 
-import { Col, Card, Button, Modal, Form } from "react-bootstrap";
+import { Col, Card, Button, Modal, Form, Dropdown } from "react-bootstrap";
 
 import { charities } from "../../data/charities";
 
@@ -23,11 +24,18 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
   const drizzleState = useDrizzleState((drizzleState) => drizzleState);
   const [showForm, setShowForm] = useState(false);
 
-  const hasOwner = useCacheCall(hodlContract, "ownerOf", [hodlId]);
+  const [ownerKey, setOwnerKey] = useState(null);
 
   const purchaseTime = useCacheCall(hodlContract, "getHodlPurchaseTime", [
     hodlId,
   ]);
+
+  useEffect(() => {
+    const key = drizzle.contracts[hodlContract].methods["ownerOf"].cacheCall([
+      hodlId,
+    ]);
+    setOwnerKey(key);
+  }, []);
 
   useEffect(() => {
     if (purchaseTime) {
@@ -70,13 +78,46 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
     return null;
   };
 
+  const contractState = drizzleState.contracts[hodlContract];
+  const owner = contractState.ownerOf[ownerKey];
+
   return (
     <>
-      {hasOwner === drizzleState.accounts[0] ? (
+      {owner && owner.value === drizzleState.accounts[0] ? (
         <Col md={3} className="d-flex align-items-stretch">
           <div className={`card-wrapper mb-3 card-${hodlType}`}>
-            <Card className="d-block text-center h-100 d-flex flex-column align-items-center">
-              <p className="text-uppercase card-title">{hodlType} HODL</p>
+            <Card className="d-block text-center h-100 d-flex flex-column align-items-center position-relative">
+              <Dropdown className="card-actions">
+                <Dropdown.Toggle variant="link" id="dropdown-basic">
+                  <Settings width={25} height={25} />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    className="text-success"
+                    onClick={handleTransferHodl}
+                  >
+                    TRANSFER
+                  </Dropdown.Item>
+                  <ContractForm
+                    contract={hodlContract}
+                    method="destroyHodl"
+                    drizzle={drizzle}
+                    drizzleState={drizzleState}
+                    render={({ state, handleSubmit }) => {
+                      state._hodlId = hodlId;
+                      return (
+                        <Dropdown.Item
+                          className="text-danger"
+                          onClick={handleSubmit}
+                        >
+                          DESTROY
+                        </Dropdown.Item>
+                      );
+                    }}
+                  />
+                </Dropdown.Menu>
+              </Dropdown>
+              <p className="text-capitalize card-title">{hodlType} HODL</p>
               <p className="card-id small">ID: {hodlId}</p>
               <p className="card-price">100 DAI</p>
               <p className="card-interest-label">Interest Accured:</p>
@@ -97,7 +138,7 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
               </p>
               {hodlType === "charity" && (
                 <>
-                  <p className="card-owner-label">CHARITY</p>
+                  <p className="card-owner-label">Charity:</p>
                   <p className="card-owner-value">
                     <ContractData
                       contract={hodlContract}
@@ -112,7 +153,7 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
               )}
               {hodlType === "ponzi" && (
                 <>
-                  <p className="card-owner-label">TIER</p>
+                  <p className="card-owner-label">Tier:</p>
                   <p className="card-owner-value">
                     <ContractData
                       contract={hodlContract}
@@ -124,7 +165,7 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
                   </p>
                 </>
               )}
-              <p className="card-owner-label">OWNER</p>
+              <p className="card-owner-label">Owner:</p>
               <p className="card-owner-value">
                 <ContractData
                   contract={hodlContract}
@@ -164,29 +205,6 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
                   );
                 }}
               />
-              <Button
-                variant="success"
-                className="mt-auto mb-3"
-                onClick={handleTransferHodl}
-              >
-                TRANSFER
-              </Button>
-              <ContractForm
-                contract={hodlContract}
-                method="destroyHodl"
-                drizzle={drizzle}
-                drizzleState={drizzleState}
-                render={({ state, handleSubmit }) => {
-                  state._hodlId = hodlId;
-                  return (
-                    <form onSubmit={handleSubmit}>
-                      <Button variant="danger" type="submit">
-                        DESTROY
-                      </Button>
-                    </form>
-                  );
-                }}
-              />
             </Card>
           </div>
         </Col>
@@ -206,7 +224,6 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
             render={({ state, handleInputChange, handleSubmit }) => {
               state.tokenId = hodlId;
               state.from = drizzleState.accounts[0];
-              console.log(state);
               return (
                 <form onSubmit={handleSubmit}>
                   <Form.Group>

@@ -41,14 +41,14 @@ const Pages = () => {
             <MainMenu />
             <DrizzleWarning />
             <Route path="/" exact component={Home} />
-            <Route path="/about" exact component={About} />
+            <Route path="/team" exact component={About} />
             <Route path="/how" exact component={How} />
             <Route path="/contact" exact component={Contact} />
           </Col>
         </Row>
       </Container>
       <footer className="footer py-3 text-center">
-        <div className="container">copyright 2020 THE HODL FACTORY</div>
+        <div className="container small">copyright 2020 THE HODL FACTORY</div>
       </footer>
     </Router>
   );

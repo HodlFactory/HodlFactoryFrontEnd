@@ -17,12 +17,14 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
   const drizzleInit = useSelector((state) => state.global.drizzleInit);
   const [showForm, setShowForm] = useState(false);
   const [indexCarousel, setIndexCarousel] = useState(0);
+  const [validated, setValidated] = useState(false);
 
   const handleCarousel = (index) => {
     setIndexCarousel(index);
   };
 
   const handleCreateHodl = () => {
+    setValidated(false);
     setShowForm(true);
   };
 
@@ -30,9 +32,23 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
     setShowForm(false);
   };
 
+  const handleForm = (e, handleSubmit) => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+    } else {
+      handleSubmit(e);
+      setShowForm(false);
+    }
+
+    setValidated(true);
+  };
+
   return (
     <>
-      <div className="d-flex flex-column align-items-center">
+      <div className="d-flex flex-column align-items-center zoom-effect">
         <p className="text-center">
           {hodlType === "regular" && <>You keep the interest</>}
           {hodlType === "charity" && <>Interest goes to charity</>}
@@ -40,13 +56,11 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
         </p>
         <div className={`card-wrapper card-${hodlType}`}>
           <Card className="d-block text-center">
-            <p className="text-uppercase card-title">{hodlType} HODL</p>
+            <p className="text-capitalize card-title">{hodlType} HODL</p>
             <p className="card-price">100 DAI</p>
-            <p className="text-uppercase card-interest-label">
-              Interest Accured:
-            </p>
+            <p className="card-interest-label">Interest Accured:</p>
             <p className="card-interest-value">??? DAI</p>
-            <p className="card-owner-label">OWNER</p>
+            <p className="card-owner-label">Owner:</p>
             <p className="card-owner-value">Your name right here!</p>
             <Button
               className="card-button-create"
@@ -85,15 +99,23 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
             render={({ state, handleInputChange, handleSubmit }) => {
               state._addressOfCharity = charities[indexCarousel].address;
               return (
-                <form onSubmit={handleSubmit}>
+                <Form
+                  noValidate
+                  validated={validated}
+                  onSubmit={(e) => handleForm(e, handleSubmit)}
+                >
                   <Form.Group controlId="formBasicEmail">
                     <Form.Label>Name</Form.Label>
                     <Form.Control
+                      required
                       name="_name"
                       type="text"
                       placeholder="Your name"
                       onChange={handleInputChange}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      Please choose a name.
+                    </Form.Control.Feedback>
                     <Form.Text className="text-muted">
                       It doesn't have to be your real name.
                     </Form.Text>
@@ -123,14 +145,10 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
                       })}
                     </Carousel>
                   )}
-                  <Button
-                    variant="success"
-                    type="submit"
-                    onClick={handleCloseForm}
-                  >
+                  <Button variant="success" type="submit">
                     Create now
                   </Button>
-                </form>
+                </Form>
               );
             }}
           />

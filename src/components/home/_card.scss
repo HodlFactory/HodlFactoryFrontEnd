@@ -8,9 +8,16 @@
   }
   &.card-charity {
     background: url("../../assets/patterns/charity.png") no-repeat center center;
+
+    .card-title {
+      font-family: "Pacifico", cursive;
+    }
   }
   &.card-ponzi {
     background: url("../../assets/patterns/ponzi.png") no-repeat center center;
+    .card-title {
+      font-family: "Expletus Sans", cursive;
+    }
   }
 }
 
@@ -61,29 +68,48 @@
 }
 
 .carousel {
+  margin-bottom: 1rem !important;
   .slider {
-    padding-bottom: 38px;
+    padding-bottom: 38px !important;
   }
   .slide {
-    background: transparent;
+    background: transparent !important;
 
     .legend {
-      bottom: -38px;
-      background: transparent;
+      bottom: -38px !important;
+      background: transparent !important;
     }
   }
 
   .carousel-status {
-    text-shadow: none;
-    color: black;
+    text-shadow: none !important;
+    color: black !important;
   }
 }
 
 .slide-panel {
-  padding: 30px 25px;
+  padding: 30px 25px !important;
 }
 
 .carousel .slide img {
-  width: auto;
-  height: 150px;
+  width: auto !important;
+  height: 150px !important;
+}
+
+.zoom-effect {
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.2);
+    z-index: 10;
+  }
+}
+
+.card-actions {
+  position: absolute;
+  top: 0;
+  right: -20px;
+  padding: 0;
+  .dropdown-toggle::after {
+    display: none;
+  }
 }
