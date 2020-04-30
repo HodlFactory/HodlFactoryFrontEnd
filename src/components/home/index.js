@@ -15,6 +15,9 @@ const Home = () => {
             <span className="font-weight-bold">HODL</span> and watch it{" "}
             <span className="text-underlined">gain interest</span>!
           </p>
+          <p className="small">
+            No Dai required to use - test Dai is minted for you automatically
+          </p>
         </Row>
         <Row className="justify-content-center">
           <Col md={3} className="d-flex align-items-stretch">

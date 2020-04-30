@@ -176,18 +176,20 @@ const HodlCard = ({ hodlId, hodlType, hodlContract, addDateToHodl }) => {
                 />
                 's HODL
               </p>
-              <p className="card-interest-label">Matures in:</p>
               {hodlType === "ponzi" ? null : (
-                <p className="card-countdown font-weight-bold">
-                  <ContractData
-                    contract={hodlContract}
-                    method="getHodlPurchaseTime"
-                    methodArgs={[hodlId]}
-                    drizzle={drizzle}
-                    drizzleState={drizzleState}
-                    render={convertToActualDate}
-                  />
-                </p>
+                <>
+                  <p className="card-interest-label">Matures in:</p>
+                  <p className="card-countdown font-weight-bold">
+                    <ContractData
+                      contract={hodlContract}
+                      method="getHodlPurchaseTime"
+                      methodArgs={[hodlId]}
+                      drizzle={drizzle}
+                      drizzleState={drizzleState}
+                      render={convertToActualDate}
+                    />
+                  </p>
+                </>
               )}
               <ContractForm
                 contract={hodlContract}

@@ -74,18 +74,7 @@ const HodlCardStatic = ({ hodlType, hodlContract }) => {
         </div>
         <p className="text-right mt-3 font-italic">
           {hodlType === "regular" && <>powered by Aave</>}
-          {hodlType === "charity" && (
-            <>
-              <p className="mb-0 text-center">
-                powered by rDai
-                <br />
-                <span className="small">
-                  (No Dai required to use - test Dai is minted for you
-                  automatically)
-                </span>
-              </p>
-            </>
-          )}
+          {hodlType === "charity" && <>powered by rDai</>}
           {hodlType === "ponzi" && (
             <>
               powered by Proprietary Ponzi Technology TM
