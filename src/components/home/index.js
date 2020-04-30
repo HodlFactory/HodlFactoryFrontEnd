@@ -17,11 +17,6 @@ const Home = () => {
           </p>
         </Row>
         <Row className="justify-content-center">
-          <p>
-            <h5><i><span className="font-weight-bold">No Dai required to use- test Dai is minted for you automatically</span></i></h5>
-          </p>
-        </Row>
-        <Row className="justify-content-center">
           <Col md={3} className="d-flex align-items-stretch">
             <HodlCardStatic
               hodlType="regular"
